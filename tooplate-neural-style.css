@@ -564,6 +564,24 @@ https://www.tooplate.com/view/2139-neural-portfolio
             background-size: 100%;
             background-image: url("img/one-erp.jpg");
         }
+        .project-card-one-erp2 {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            width: 600px;
+            height: 400px;
+            background-size: 100%;
+            background-image: url("img/one-erp.png");
+        }
+        .project-card-one-erp3 {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            width: 600px;
+            height: 400px;
+            background-size: 100%;
+            background-image: url("img/bsp.png");
+        }
         .project-card-MIFS {
             position: relative;
             overflow: hidden;
@@ -573,23 +591,59 @@ https://www.tooplate.com/view/2139-neural-portfolio
             background-size: 100%;
             background-image: url("img/one-erp.jpg");
         }
+        .project-card-MIFS2 {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            width: 1000px;
+            height: 1020px;
+            background-size: 100%;
+            background-image: url("img/mifs2.jpg");
+        }
         .project-card-KCTC {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            width: 600px;
+            height: 326px;
+            background-size: 100%;
+            background-image: url("img/KCTC.png");
+        }
+        .project-card-KCTC2 {
             position: relative;
             overflow: hidden;
             cursor: pointer;
             width: 600px;
             height: 320px;
             background-size: 100%;
-            background-image: url("img/KCTC.png");
+            background-image: url("img/KCTC2.png");
+        }
+        .project-card-KCTC3 {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            width: 600px;
+            height: 320px;
+            background-size: 100%;
+            background-image: url("img/KCTC3.png");
         }
         .project-card-LAH {
             position: relative;
             overflow: hidden;
             cursor: pointer;
             width: 600px;
-            height: 200px;
-            background-size: 50%;
+            height: 400px;
+            background-size: 100%;
             background-image: url("img/lah.png");
+        }
+        .project-card-LAH2 {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            width: 600px;
+            height: 600px;
+            background-size: 100%;
+            background-image: url("img/lah.jpg");
         }
         .project-card-KNOX {
             position: relative;
@@ -600,6 +654,24 @@ https://www.tooplate.com/view/2139-neural-portfolio
             background-size: 100%;
             background-image: url("img/knox.png");
         }
+        .project-card-KNOX-DETAIL {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            width: 600px;
+            height: 320px;
+            background-size: 100%;
+            background-image: url("img/knox.jpg");
+        }
+        .project-card-KNOX-DETAIL2 {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            width: 600px;
+            height: 320px;
+            background-size: 100%;
+            background-image: url("img/knox2.jpg");
+        }
         .project-card-WINTERGAME {
             position: relative;
             overflow: hidden;
@@ -608,6 +680,15 @@ https://www.tooplate.com/view/2139-neural-portfolio
             height: 400px;
             background-size: 100%;
             background-image: url("img/wintergame.png");
+        }
+        .project-card-WINTERGAME2 {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            width: 600px;
+            height: 400px;
+            background-size: 100%;
+            background-image: url("img/wintergame2.jpg");
         }
         
 
