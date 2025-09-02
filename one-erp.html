@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>한화에어로스페이스 차세대 One-ERP | Big Virus 포트폴리오</title>
+
+  <!-- Fonts & Base Style -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Exo+2:wght@300;400;500;600;700&family=Audiowide&display=swap" rel="stylesheet"/>
+  <link href="tooplate-neural-style.css" rel="stylesheet"/>
+
+  <style>
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+    .section-title { margin-bottom: 18px; }
+    .kicker { color: var(--text-secondary); letter-spacing: .08em; font-size: .9rem; text-transform: uppercase; }
+
+    .facts-grid {
+      display: grid; gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      margin: 18px 0 6px;
+    }
+    .fact {
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px; padding: 14px 16px;
+      background: rgba(255,255,255,.03);
+    }
+    .fact .label { font-size: .78rem; color: var(--text-secondary); margin-bottom: 6px; }
+    .fact .value { font-size: 1.02rem; }
+
+    .cards { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .card {
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 16px; padding: 16px;
+      background: rgba(255,255,255,.04);
+    }
+    .card h3 { margin-bottom: 10px; color: var(--primary); font-weight: 600; }
+    .muted { color: var(--text-secondary); }
+
+    .list { margin: 0; padding-left: 18px; }
+    .list li { margin: 6px 0; line-height: 1.7; }
+
+    section { padding: 60px 0 40px; }
+    .hero { padding-top: 92px; }
+    .subtitle { color: var(--text-secondary); }
+  </style>
+</head>
+<body>
+  <canvas id="neural-bg"></canvas>
+
+  <!-- Nav -->
+  <nav id="navbar">
+    <div class="nav-container">
+      <a href="index.html#home" class="logo-container">
+        <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="50" cy="20" r="8" fill="none" stroke="#00ffff" stroke-width="2"/>
+          <circle cx="25" cy="50" r="8" fill="none" stroke="#ff00ff" stroke-width="2"/>
+          <circle cx="75" cy="50" r="8" fill="none" stroke="#ff00ff" stroke-width="2"/>
+          <circle cx="50" cy="80" r="8" fill="none" stroke="#ffff00" stroke-width="2"/>
+          <line x1="50" y1="28" x2="25" y2="42" stroke="#00ffff" stroke-width="1" opacity="0.6"/>
+          <line x1="50" y1="28" x2="75" y2="42" stroke="#00ffff" stroke-width="1" opacity="0.6"/>
+          <line x1="25" y1="58" x2="50" y2="72" stroke="#ff00ff" stroke-width="1" opacity="0.6"/>
+          <line x1="75" y1="58" x2="50" y2="72" stroke="#ff00ff" stroke-width="1" opacity="0.6"/>
+          <circle cx="50" cy="50" r="5" fill="#00ffff"/>
+          <line x1="50" y1="28" x2="50" y2="45" stroke="#00ffff" stroke-width="1" opacity="0.6"/>
+          <line x1="50" y1="55" x2="50" y2="72" stroke="#ffff00" stroke-width="1" opacity="0.6"/>
+          <line x1="33" y1="50" x2="45" y2="50" stroke="#ff00ff" stroke-width="1" opacity="0.6"/>
+          <line x1="55" y1="50" x2="67" y2="50" stroke="#ff00ff" stroke-width="1" opacity="0.6"/>
+        </svg>
+        <span class="logo-text">Big Virus</span>
+      </a>
+      <div class="mobile-menu-toggle" id="mobile-toggle"><span></span><span></span><span></span></div>
+      <div class="nav-menu" id="nav-menu">
+        <ul>
+          <li><a href="index.html#home">홈</a></li>
+          <li><a href="index.html#about">소개</a></li>
+          <li><a href="index.html#projects">프로젝트</a></li>
+          <li><a href="index.html#skills">기술</a></li>
+          <li><a href="index.html#contact">연락처</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-content">
+      <span class="kicker">Project Case Study</span>
+      <h1 class="glitch" data-text="One-ERP (BSP)">한화에어로스페이스 차세대 One-ERP 경영지원(BSP:Business Support Program) 모듈</h1>
+      <p class="subtitle">
+        통합 ERP 중심의 차세대 시스템 구축에서 <strong>BSP 모듈 PL</strong>로 참여하여
+        범위·일정·자원·리스크를 관리하고, 표준문서/법무/개선업무 모듈의
+        <strong>분석·설계·개발</strong>과 <strong>DB 설계·성능 최적화·마이그레이션·통합 테스트·안정화</strong>까지 주도.
+      </p>
+
+      <div class="facts-grid">
+        <div class="fact"><div class="label">프로젝트명</div><div class="value">한화에어로스페이스 차세대 One-ERP 프로젝트</div></div>
+        <div class="fact"><div class="label">주사업자/발주처</div><div class="value">한화시스템 / 한화에어로스페이스</div></div>
+        <div class="fact"><div class="label">수행기간/사업규모</div><div class="value">2023.11 ~ 2025.04 / 726억</div></div>
+        <div class="fact"><div class="label">역할</div><div class="value">경영지원(BSP) 모듈 개발, 리딩, DB 설계 및 성능 최적화</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 개요 (주요내용) -->
+  <section id="overview">
+    <div class="container">
+      <h2 class="section-title">프로젝트 개요</h2>
+      <p class="muted">
+        한화디펜스·한화방산이 한화에어로스페이스로 통합법인 출범에 맞추어 추진한 차세대 시스템 구축 사업으로,
+        통합 ERP 시스템을 중심으로 MES, PLM, SRM, SCM, BSP, QIS, AM-AP, EHS 등 기존 Non-ERP·레거시 시스템을
+        표준화, 통합, 재구축한 프로젝트.
+      </p>
+    </div>
+  </section>
+
+  <!-- 담당업무 -->
+  <section id="role">
+    <div class="container cards">
+      <div class="card">
+        <h3>담당역할</h3>
+        <ul class="list">
+          <li>경영지원(BSP: Business Support Program) 모듈 개발, 리딩, DB 설계 및 성능 최적화</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>BSP 모듈 개발 리딩</h3>
+        <ul class="list">
+          <li>프로젝트 범위, 일정, 자원 계획 수립 및 WBS 작성</li>
+          <li>6인 개발팀 리딩, 기능점검 코드 리뷰 및 품질 관리</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>BSP(경영지원) 모듈 개발</h3>
+        <ul class="list">
+          <li>표준문서관리, 법무관리, 개선업무관리, 배차관리, 사회공헌, 공문서관리, ITSM, 보안관리, 특허관리 등 전사 경영지원 시스템의 주요 기능 개발</li>
+          <li>그룹웨어와 REST API 연동하여 전자결재 송수신 기능 개발</li>
+          <li>EAI 통해 ERP와 연동하여 개선 시상금, 특허 출원금 등 급여 반영기능 개발</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>산출물 작성 및 관리</h3>
+        <ul class="list">
+          <li>화면 설계서, 프로그램 설계서, 인터페이스 설계서, 배치 프로그램 설계서, 단위/통합테스트 결과서, 사용자매뉴얼, 운영자매뉴얼 등 산출물 작성 및 최신화 관리</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>데이터 마이그레이션</h3>
+        <ul class="list">
+          <li>기존 3사(에어로, 디펜스, 방산)의 레거시 시스템 DB에 존재하는 각 코드/데이터를 통합·표준화 처리 후, 신규 개발된 시스템으로 통합 이관 처리</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>SQL 성능 개선</h3>
+        <ul class="list">
+          <li>비효율이 높은 쿼리 실행계획 분석·튜닝하여 데이터 처리 성능 개선</li>
+          <li>화면↔WAS↔DB 전 구간 트랜잭션 흐름 추적 및 병목 지점/지연 원인 분석</li>
+          <li>응답 속도가 느린 비효율적 SQL 식별 및 실행 계획 분석·튜닝 수행</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>테스트 / 표준화 / 안정화</h3>
+        <ul class="list">
+          <li>신뢰성/단위/통합 테스트 수행을 통해 품질 및 표준화 기반 확보</li>
+          <li>정적테스트 SPARROW 툴 활용하여 코딩 규칙 표준화 처리</li>
+          <li>통합 테스트 시 현업 사용자 대상 테스트 수행, 오류/개선사항 반영</li>
+          <li>각 산출물 및 결과물 납품 후 안정화 단계 모니터링 수행, 오픈 초기 안정성 확보</li>
+          <li>시스템 오픈 이후 ITSM 통해 접수된 오류 수정, 개선사항, 데이터 수정 요청 반영</li>
+          <li>오픈 이후 안정화 기간 긴급배포 등 신속 대응 체계 마련, 시스템 이중화로 안정적 서비스 제공</li>
+          <li>프로그램 형상 변경 시 설계 산출물 최신화</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 성과 & 결과 (요약) -->
+  <section id="outcomes">
+    <div class="container">
+      <h2 class="section-title">성과 & 결과</h2>
+      <ul class="list">
+        <li>프로젝트 일정 내 성공적으로 시스템 오픈</li>
+        <li>한화에어로스페이스 고객 만족도 조사 결과 90% 이상 만족으로 응답</li>
+        <li>오픈/안정화 단계 이슈 대응 및 운영 안정성 확보(ITSM·긴급배포·이중화)</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 기술 스택 -->
+  <section id="stack">
+    <div class="container">
+      <h2 class="section-title">관련 기술</h2>
+
+      <div class="cards">
+        <div class="card">
+          <h3>언어 / 프레임워크</h3>
+          <ul class="list">
+            <li>언어: Java, SQL, JavaScript</li>
+            <li>F/W: Spring F/W</li>
+            <li>Tool: Spring Boot, Nexacro</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>플랫폼 / 미들웨어 / DB</h3>
+          <ul class="list">
+            <li>O/S: Linux</li>
+            <li>WAS: JEUS, WebtoB</li>
+            <li>D/B: Tibero / Oracle</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>도구</h3>
+          <ul class="list">
+            <li>DBeaver, Jenkins, OZ Report, Easy PDF, Git, Sourcetree, ChakraMax, Hiware</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="padding: 28px 0;">
+    <div class="container muted">
+      © Big Virus 포트폴리오 — One-ERP (BSP) Case Study
+    </div>
+  </footer>
+
+  <script src="tooplate-neural-scripts.js"></script>
+</body>
+</html>

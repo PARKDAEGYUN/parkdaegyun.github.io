@@ -555,6 +555,61 @@ https://www.tooplate.com/view/2139-neural-portfolio
             overflow: hidden;
             cursor: pointer;
         }
+        .project-card-one-erp {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            width: 600px;
+            height: 350px;
+            background-size: 100%;
+            background-image: url("img/one-erp.jpg");
+        }
+        .project-card-MIFS {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            width: 600px;
+            height: 350px;
+            background-size: 100%;
+            background-image: url("img/one-erp.jpg");
+        }
+        .project-card-KCTC {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            width: 600px;
+            height: 320px;
+            background-size: 100%;
+            background-image: url("img/KCTC.png");
+        }
+        .project-card-LAH {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            width: 600px;
+            height: 200px;
+            background-size: 50%;
+            background-image: url("img/lah.png");
+        }
+        .project-card-KNOX {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            width: 600px;
+            height: 320px;
+            background-size: 100%;
+            background-image: url("img/knox.png");
+        }
+        .project-card-WINTERGAME {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            width: 600px;
+            height: 400px;
+            background-size: 100%;
+            background-image: url("img/wintergame.png");
+        }
+        
 
         .project-card h3 {
             font-family: 'Audiowide', sans-serif;
@@ -613,11 +668,11 @@ https://www.tooplate.com/view/2139-neural-portfolio
 
         .skill-node {
             font-family: 'Audiowide', sans-serif;
-            width: 120px;
-            height: 120px;
+            width: 240px;
+            height: 240px;
             background: var(--bg-glass);
             border: 2px solid var(--primary);
-            border-radius: 50%;
+            border-radius: 10%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -635,7 +690,7 @@ https://www.tooplate.com/view/2139-neural-portfolio
             position: absolute;
             width: 100%;
             height: 100%;
-            border-radius: 50%;
+            border-radius: 10%;
             background: radial-gradient(circle, var(--primary), transparent);
             opacity: 0;
             transition: all 0.3s ease;
@@ -1025,3 +1080,12 @@ https://www.tooplate.com/view/2139-neural-portfolio
                 font-size: 1.5rem;
             }
         }
+.projects-grid .glass-card { position: relative; }
+.projects-grid .glass-card .stretched-link {
+  position: absolute; inset: 0; z-index: 1;
+  text-decoration: none; color: inherit;   /* 글씨색 변화 방지 */
+}
+.projects-grid .glass-card .stretched-link:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 4px; border-radius: inherit;
+}

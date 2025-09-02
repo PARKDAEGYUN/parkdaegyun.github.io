@@ -1,9 +1,32 @@
 <!DOCTYPE html>
 <html lang="ko">
+
+<!-- EmailJS 스크립트 (body 끝나기 직전에 넣기) -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+    // 카드형 링크 동작 + 키보드 접근성(Enter/Space)
+    document.querySelectorAll('.projects-grid .glass-card[role="link"]').forEach(card => {
+      const href = card.dataset.href;
+      if (!href) return;
+  
+      card.addEventListener('click', () => {
+        location.href = href;
+      });
+  
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          location.href = href;
+        }
+      });
+    });
+  </script>
+
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>뉴럴 네트워크 포트폴리오</title>
+    <title>Big Virus 포트폴리오</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Exo+2:wght@300;400;500;600;700&family=Audiowide&display=swap" rel="stylesheet">
@@ -111,69 +134,82 @@
     <section id="projects" class="fade-in">
         <h2 class="section-title">주요 프로젝트</h2>
         <div class="projects-grid">
-            <div class="glass-card project-card">
-                <h3 style="color: var(--primary);">한화에어로스페이스 차세대 One-ERP 프로젝트</h3>
-                <p style="color: var(--text-secondary);">한화디펜스·한화방산이 한화에어로스페이스로 통합법인 출범에 맞추어 추진한 차세대 시스템 구축 사업으로, 통합 ERP 시스템을 중심으로 MES, PLM, SRM, SCM, BSP, QIS, AM-AP, EHS 등 기존 Non-ERP· 레거시 시스템을 표준화, 통합, 재구축한 프로젝트</p>
-            </div>
-            <div class="glass-card project-card">
-                <h3 style="color: var(--secondary);">다출처 영상 융합 처리 체계 개발 사업업</h3>
-                <p style="color: var(--text-secondary);">다출처 영상융합 체계 개발 사업은 전자광학(EO), 적외선(IR), 합성개구레이다(SAR) 등 다양한 위성 센서에서 수집된 영상을 융합하여, 특정 지역의 학습된 표적들을 자동으로 탐지하고 인지하는 시스템을 개발하는 프로젝트</p>
-            </div>
-            <div class="glass-card project-card">
-                <h3 style="color: var(--accent);">LAH(Light Armed Helicopter) 마일즈 시스템</h3>
-                <p style="color: var(--text-secondary);">LAH(소형무장헬기)에 육군 과학화 전투 훈련단에서 운용하는 교전 훈련 장비를 구매, 개조, 설치하여 KCTC 훈련장에서 운용이 가능하도록 LAH용 마일즈 장비를 개발하는 체계 개발 사업</p>
-            </div>
-            <div class="glass-card project-card">
-                <h3 style="color: var(--primary);">육군과학화 전투훈련단 여단급 확장 체계개발 사업</h3>
-                <p style="color: var(--text-secondary);">육군 과학화 전투훈련 중앙통제장비체계(KCTC)의 기존 대대급 규모 훈련장을 여단급 규모 훈련장으로 체계 개발하는 사업</p>
-            </div>
-            <div class="glass-card project-card">
-                <h3 style="color: var(--secondary);">삼성 KNOX 라이센스 발급 시스템템</h3>
-                <p style="color: var(--text-secondary);">삼성전자 GSBN(Global Samsung Business Network) 기반 웹 무역 포털 내 삼성 KNOX 소프트웨어 라이선스의 B2B 구매, 정산 체계를 구축하는 프로젝트로, S-ERP의 API 연계를 통해 기업 대상 라이선스 주문, 발급, 빌링 처리 시스템 구축 프로젝트</p>
-            </div>
-            <div class="glass-card project-card">
-                <h3 style="color: var(--accent);">2011 카자르스탄 아스타나 알마티 동계 아시안 게임</h3>
-                <p style="color: var(--text-secondary);">2011년 카자흐스탄 아스타나·알마티에서 개최된 동계 아시안게임 운영 시스템 구축 및 지원 사업으로, 대회 기간 동안 경기장 출입 관리, 참가자 등록, 대회 운영 지원을 위한 IT 시스템을 구축, 운영한 프로젝트구</p>
-            </div>
+          <div class="glass-card project-card-one-erp">
+            <a class="stretched-link" href="one-erp.html" aria-label="한화에어로스페이스 차세대 One-ERP 프로젝트"></a>
+            <h3 style="color: var(--primary);">한화에어로스페이스 차세대 One-ERP 프로젝트</h3>
+            <p style="color: black;">한화디펜스·한화방산이 한화에어로스페이스로 통합법인 출범에 맞추어 추진한 차세대 시스템 구축 사업으로, 통합 ERP 시스템을 중심으로 MES, PLM, SRM, SCM, BSP, QIS, AM-AP, EHS 등 기존 Non-ERP· 레거시 시스템을 표준화, 통합, 재구축한 프로젝트</p>
+          </div>
+      
+          <div class="glass-card project-card-MIFS">
+            <a class="stretched-link" href="mifs.html" aria-label="다출처 영상 융합 처리 체계 개발 사업"></a>
+            <h3 style="color: var(--secondary);">다출처 영상 융합 처리 체계 개발 사업업</h3>
+            <p style="color: black;">다출처 영상융합 체계 개발 사업은 전자광학(EO), 적외선(IR), 합성개구레이다(SAR) 등 다양한 위성 센서에서 수집된 영상을 융합하여, 특정 지역의 학습된 표적들을 자동으로 탐지하고 인지하는 시스템을 개발하는 프로젝트</p>
+          </div>
+      
+          <div class="glass-card project-card-LAH">
+            <a class="stretched-link" href="lah-miles.html" aria-label="LAH 마일즈 시스템"></a>
+            <h3 style="color: var(--accent);">LAH(Light Armed Helicopter) 마일즈 시스템</h3>
+            <p style="color: orange;">LAH(소형무장헬기)에 육군 과학화 전투 훈련단에서 운용하는 교전 훈련 장비를 구매, 개조, 설치하여 KCTC 훈련장에서 운용이 가능하도록 LAH용 마일즈 장비를 개발하는 체계 개발 사업</p>
+          </div>
+      
+          <div class="glass-card project-card-KCTC">
+            <a class="stretched-link" href="kctc.html" aria-label="육군과학화 전투훈련단 여단급 확장 체계개발"></a>
+            <h3 style="color: var(--primary);">육군과학화 전투훈련단 여단급 확장 체계개발 사업</h3>
+            <p style="color: orange;">육군 과학화 전투훈련 중앙통제장비체계(KCTC)의 기존 대대급 규모 훈련장을 여단급 규모 훈련장으로 체계 개발하는 사업</p>
+          </div>
+      
+          <div class="glass-card project-card-KNOX">
+            <a class="stretched-link" href="gsbn-knox.html" aria-label="삼성 KNOX 라이센스 발급 시스템"></a>
+            <h3 style="color: var(--secondary);">삼성 KNOX 라이센스 발급 시스템템</h3>
+            <p style="color: black;">삼성전자 GSBN(Global Samsung Business Network) 기반 웹 무역 포털 내 삼성 KNOX 소프트웨어 라이선스의 B2B 구매, 정산 체계를 구축하는 프로젝트로, S-ERP의 API 연계를 통해 기업 대상 라이선스 주문, 발급, 빌링 처리 시스템 구축 프로젝트</p>
+          </div>
+      
+          <div class="glass-card project-card-WINTERGAME">
+            <a class="stretched-link" href="winter-asian-games-2011.html" aria-label="2011 동계 아시안 게임 시스템 구축"></a>
+            <h3 style="color: black;">2011 카자르스탄 아스타나 알마티 동계 아시안 게임</h3>
+            <p style="color: var(--text-secondary);">2011년 카자흐스탄 아스타나·알마티에서 개최된 동계 아시안게임 운영 시스템 구축 및 지원 사업으로, 대회 기간 동안 경기장 출입 관리, 참가자 등록, 대회 운영 지원을 위한 IT 시스템을 구축, 운영한 프로젝트구</p>
+          </div>
         </div>
-    </section>
+      </section>
 
     <section id="skills" class="fade-in">
         <h2 class="section-title">기술</h2>
         <div class="skills-container">
-            <div class="skill-node"><span>JAVA</span></div>
-            <div class="skill-node"><span>SQL</span></div>
-            <div class="skill-node"><span>JavaScript</span></div>
-            <div class="skill-node"><span>Nexacro</span></div>
-            <div class="skill-node"><span>SQL Tunning</span></div>
+            <div class="skill-node"><span>Backend: Java, Spring Boot, SQL, Nexacro</span></div>
+            <div class="skill-node"><span>Database: Oracle, Tibero, MySQL, SQL Tuning, Data Modeling</span></div>
+            <div class="skill-node"><span>Tools/Etc.: Jenkins CI/CD, Git, Eclipse, Visual Studio</span></div>
         </div>
 
-        <h2 class="section-title">보유자격</h2>
-        <div class="skills-container">
-            <div class="skill-node" ><span >SQLP</span></div>
-            <div class="skill-node"><span>SQLD</span></div>
-            <div class="skill-node"><span>OCP</span></div>
-            <div class="skill-node"><span>OCJP</span></div>
-            <div class="skill-node"><span>DAsP</span></div>
-            <div class="skill-node"><span>정보처리기사</span></div>
+        <h2 class="section-title">보유 자격</h2>
+        <div class="projects-grid">
+            <div class="skill-node">
+                <h3 style="color: white;">SQLP</h3>
+                <p style="color: var(--text-secondary);">SQL Professional (2023) - 데이터 아키텍처 설계·튜닝 전문 자격</p>
+            </div>
         </div>
     </section>
 
     <section id="contact" class="fade-in">
         <h2 class="section-title">연락하기</h2>
-        <form class="contact-form glass-card">
-            <div class="form-group">
-                <input type="text" placeholder="이름" required>
-            </div>
-            <div class="form-group">
-                <input type="email" placeholder="이메일" required>
-            </div>
-            <div class="form-group">
-                <textarea rows="5" placeholder="메시지" required></textarea>
-            </div>
-            <button type="submit" class="neural-btn">메시지 보내기</button>
+      
+        <form id="contactForm" class="contact-form glass-card">
+          <!-- 스팸 방지용 숨김 필드(봇 차단) -->
+          <input type="text" name="_gotcha" style="display:none">
+      
+          <div class="form-group">
+            <input type="text" name="name" placeholder="이름" required>
+          </div>
+          <div class="form-group">
+            <input type="email" name="email" placeholder="이메일" required>
+          </div>
+          <div class="form-group">
+            <textarea name="message" rows="5" placeholder="메시지" required></textarea>
+          </div>
+          <button type="submit" class="neural-btn">메시지 보내기</button>
+      
+          <p id="formStatus" style="margin-top:12px;color:var(--text-secondary);"></p>
         </form>
-    </section>
+      </section>
 
     <footer>
         <div class="footer-content">
