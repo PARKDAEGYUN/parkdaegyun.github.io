@@ -1,13 +1,25 @@
+const DEFAULT_TYPES = [
+  { name: '전체', slug: 'all', icon: '🍽️' },
+  { name: '구내식당', slug: 'cafeteria', icon: '🏢' },
+  { name: '맛집', slug: 'restaurant', icon: '⭐' },
+  { name: '분식/덮밥', slug: 'casual', icon: '🍚' },
+];
+
 function resolveApiOrigin() {
+  const cfg = window.LUNCHMAP_CONFIG || {};
+  if (cfg.apiOrigin) return cfg.apiOrigin.replace(/\/$/, '');
   const params = new URLSearchParams(window.location.search);
   const override = params.get('api');
   if (override) return override.replace(/\/$/, '');
   if (window.location.port === '8080') return '';
-  return 'http://localhost:8080';
+  const host = window.location.hostname;
+  if (host === 'localhost' || host === '127.0.0.1') return 'http://localhost:8080';
+  return null;
 }
 
 const API_ORIGIN = resolveApiOrigin();
-const API_BASE = `${API_ORIGIN}/api/v1/lunch`;
+const STATIC_MODE = API_ORIGIN === null;
+const API_BASE = API_ORIGIN != null ? `${API_ORIGIN}/api/v1/lunch` : null;
 
 const TYPE_COLORS = {
   cafeteria: '#00ffff',
@@ -26,6 +38,171 @@ let searchCenter = null;
 let searchCenterMarker = null;
 let searchRadiusM = 1500;
 let mapClientId = '';
+
+function haversineMeters(lat1, lon1, lat2, lon2) {
+  const earthRadiusM = 6371000;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) ** 2
+    + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180)
+    * Math.sin(dLon / 2) ** 2;
+  return earthRadiusM * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function mapOsmCategory(amenity, cuisine) {
+  if (amenity === 'cafe') return '카페';
+  if (amenity === 'fast_food') return '패스트푸드';
+  if (cuisine) return `${cuisine} 요리`;
+  return '음식점';
+}
+
+function mapOsmTypeSlug(amenity) {
+  if (amenity === 'fast_food' || amenity === 'food_court') return 'casual';
+  if (amenity === 'cafe') return 'casual';
+  return 'restaurant';
+}
+
+function buildOsmAddress(tags) {
+  const parts = [
+    tags['addr:city'],
+    tags['addr:district'],
+    tags['addr:street'],
+    tags['addr:housenumber'],
+  ].filter(Boolean);
+  return parts.join(' ').trim();
+}
+
+async function searchOsmPlaces(lat, lng, radiusM) {
+  const radius = Math.min(Math.max(radiusM, 200), 5000);
+  const query = `[out:json][timeout:12];
+(
+  node["amenity"~"restaurant|fast_food|cafe|food_court"](around:${radius},${lat},${lng});
+  way["amenity"~"restaurant|fast_food|cafe|food_court"](around:${radius},${lat},${lng});
+);
+out center 25;`;
+
+  const res = await fetch('https://maps.mail.ru/osm/tools/overpass/api/interpreter', {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: query,
+  });
+  if (!res.ok) throw new Error('주변 맛집 검색 실패');
+  const root = await res.json();
+  const elements = root.elements || [];
+
+  const places = [];
+  elements.forEach((element, index) => {
+    const latVal = element.lat ?? element.center?.lat;
+    const lngVal = element.lon ?? element.center?.lon;
+    if (latVal == null || lngVal == null) return;
+
+    const tags = element.tags || {};
+    let name = tags.name || tags['name:ko'] || '';
+    if (!name) return;
+
+    const distanceM = Math.round(haversineMeters(lat, lng, latVal, lngVal));
+    if (distanceM > radius) return;
+
+    const amenity = tags.amenity || '';
+    const cuisine = tags.cuisine || '';
+    const category = mapOsmCategory(amenity, cuisine);
+    const typeSlug = mapOsmTypeSlug(amenity);
+    const typeMeta = DEFAULT_TYPES.find(t => t.slug === typeSlug) || DEFAULT_TYPES[2];
+
+    places.push({
+      id: -(index + 1),
+      name,
+      typeSlug,
+      typeName: typeMeta.name,
+      typeIcon: typeMeta.icon,
+      menuHighlight: category,
+      description: '',
+      address: buildOsmAddress(tags),
+      roadAddress: buildOsmAddress(tags),
+      phone: tags.phone || '',
+      latitude: latVal,
+      longitude: lngVal,
+      imageUrl: '',
+      rating: 0,
+      reviewCount: 0,
+      lunchPriceMin: null,
+      lunchPriceMax: null,
+      openLunch: '',
+      closeLunch: '',
+      soloDining: false,
+      workerVerified: false,
+      distanceM,
+      buildingName: '',
+    });
+  });
+
+  return places
+    .sort((a, b) => a.distanceM - b.distanceM)
+    .slice(0, 25);
+}
+
+function filterSpots(list) {
+  const keyword = document.getElementById('keywordInput').value.trim().toLowerCase();
+  const soloOnly = document.getElementById('soloOnlyFilter').checked;
+  const verifiedOnly = document.getElementById('verifiedOnlyFilter').checked;
+
+  return list.filter(s => {
+    if (activeType && activeType !== 'all' && s.typeSlug !== activeType) return false;
+    if (keyword) {
+      const hay = `${s.name} ${s.menuHighlight || ''} ${s.buildingName || ''}`.toLowerCase();
+      if (!hay.includes(keyword)) return false;
+    }
+    if (soloOnly && !s.soloDining) return false;
+    if (verifiedOnly && !s.workerVerified) return false;
+    return true;
+  });
+}
+
+async function geocodePhoton(query) {
+  const res = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=5&lang=default`);
+  if (!res.ok) throw new Error('위치를 찾을 수 없습니다.');
+  const json = await res.json();
+  const features = json.features || [];
+  const match = features.find(f => f.properties?.countrycode === 'kr') || features[0];
+  if (!match) throw new Error('위치를 찾을 수 없습니다.');
+
+  const [lng, lat] = match.geometry.coordinates;
+  const props = match.properties || {};
+  return {
+    query,
+    label: [props.name, props.city, props.state].filter(Boolean).join(' ') || query,
+    latitude: lat,
+    longitude: lng,
+  };
+}
+
+async function resolveCenter(query) {
+  if (window.naver?.maps?.Service?.geocode) {
+    try {
+      return await geocodeOnClient(query);
+    } catch {
+      /* Photon fallback */
+    }
+  }
+  return geocodePhoton(query);
+}
+
+async function loadMapConfig() {
+  const cfg = window.LUNCHMAP_CONFIG || {};
+  if (cfg.naverClientId) {
+    return { clientId: cfg.naverClientId, webUrls: cfg.webUrls || [] };
+  }
+  if (!API_ORIGIN) return { clientId: '', webUrls: [] };
+  const res = await fetch(`${API_ORIGIN}/api/v1/config/naver-map`);
+  if (!res.ok) throw new Error(`지도 설정 API 오류 (${res.status})`);
+  const json = await res.json();
+  return json.data;
+}
+
+async function loadTypes() {
+  if (!API_BASE) return DEFAULT_TYPES;
+  return fetchJson(`${API_BASE}/types`);
+}
 
 async function fetchJson(url) {
   let res;
@@ -246,8 +423,9 @@ function renderMapSetupInfo(config) {
     `${pageUrl}/`,
     ...(config?.webUrls || []),
     window.location.origin,
-    `${API_ORIGIN}/lunch`,
-    `${API_ORIGIN}/lunch/`,
+    `${window.location.origin}/map`,
+    `${window.location.origin}/map/`,
+    ...(API_ORIGIN ? [`${API_ORIGIN}/map`, `${API_ORIGIN}/map/`] : []),
   ]));
   document.getElementById('mapSetupPageUrl').textContent = pageUrl;
   document.getElementById('mapSetupClientId').textContent = config?.clientId || '-';
@@ -418,48 +596,38 @@ function geocodeOnClient(query) {
 }
 
 async function resolveLocation(query) {
-  try {
-    const soloOnly = document.getElementById('soloOnlyFilter').checked;
-    const verifiedOnly = document.getElementById('verifiedOnlyFilter').checked;
-    const spotKeyword = document.getElementById('keywordInput').value.trim();
-    const params = new URLSearchParams({ query, radiusM: String(searchRadiusM) });
-    if (activeType && activeType !== 'all') params.set('type', activeType);
-    if (spotKeyword) params.set('keyword', spotKeyword);
-    if (soloOnly) params.set('soloOnly', 'true');
-    if (verifiedOnly) params.set('verifiedOnly', 'true');
+  if (API_BASE) {
+    try {
+      const soloOnly = document.getElementById('soloOnlyFilter').checked;
+      const verifiedOnly = document.getElementById('verifiedOnlyFilter').checked;
+      const spotKeyword = document.getElementById('keywordInput').value.trim();
+      const params = new URLSearchParams({ query, radiusM: String(searchRadiusM) });
+      if (activeType && activeType !== 'all') params.set('type', activeType);
+      if (spotKeyword) params.set('keyword', spotKeyword);
+      if (soloOnly) params.set('soloOnly', 'true');
+      if (verifiedOnly) params.set('verifiedOnly', 'true');
 
-    const result = await fetchJson(`${API_BASE}/locations/search?${params}`);
-    return {
-      center: {
-        query: result.location.query,
-        label: result.location.label,
-        latitude: result.location.latitude,
-        longitude: result.location.longitude,
-      },
-      spots: result.spots,
-    };
-  } catch {
-    if (!window.naver?.maps?.Service?.geocode && mapClientId) {
-      await loadNaverMapScript(mapClientId);
+      const result = await fetchJson(`${API_BASE}/locations/search?${params}`);
+      return {
+        center: {
+          query: result.location.query,
+          label: result.location.label,
+          latitude: result.location.latitude,
+          longitude: result.location.longitude,
+        },
+        spots: result.spots,
+      };
+    } catch {
+      /* static / API fallback */
     }
-    const center = await geocodeOnClient(query);
-    const params = new URLSearchParams({
-      nearLat: String(center.latitude),
-      nearLng: String(center.longitude),
-      radiusM: String(searchRadiusM),
-      nearQuery: query,
-    });
-    const spotKeyword = document.getElementById('keywordInput').value.trim();
-    const soloOnly = document.getElementById('soloOnlyFilter').checked;
-    const verifiedOnly = document.getElementById('verifiedOnlyFilter').checked;
-    if (activeType && activeType !== 'all') params.set('type', activeType);
-    if (spotKeyword) params.set('keyword', spotKeyword);
-    if (soloOnly) params.set('soloOnly', 'true');
-    if (verifiedOnly) params.set('verifiedOnly', 'true');
-
-    const nearbySpots = await fetchJson(`${API_BASE}/spots?${params}`);
-    return { center, spots: nearbySpots };
   }
+
+  if (!window.naver?.maps?.Service?.geocode && mapClientId) {
+    await loadNaverMapScript(mapClientId);
+  }
+  const center = await resolveCenter(query);
+  const osmSpots = await searchOsmPlaces(center.latitude, center.longitude, searchRadiusM);
+  return { center, spots: filterSpots(osmSpots) };
 }
 
 async function applySearchResults() {
@@ -502,22 +670,31 @@ async function loadSpots() {
   }
 
   try {
-    const keyword = document.getElementById('keywordInput').value.trim();
-    const soloOnly = document.getElementById('soloOnlyFilter').checked;
-    const verifiedOnly = document.getElementById('verifiedOnlyFilter').checked;
+    if (API_BASE) {
+      const keyword = document.getElementById('keywordInput').value.trim();
+      const soloOnly = document.getElementById('soloOnlyFilter').checked;
+      const verifiedOnly = document.getElementById('verifiedOnlyFilter').checked;
 
-    const params = new URLSearchParams({
-      nearLat: String(searchCenter.latitude),
-      nearLng: String(searchCenter.longitude),
-      radiusM: String(searchRadiusM),
-      nearQuery: searchCenter.query,
-    });
-    if (activeType && activeType !== 'all') params.set('type', activeType);
-    if (keyword) params.set('keyword', keyword);
-    if (soloOnly) params.set('soloOnly', 'true');
-    if (verifiedOnly) params.set('verifiedOnly', 'true');
+      const params = new URLSearchParams({
+        nearLat: String(searchCenter.latitude),
+        nearLng: String(searchCenter.longitude),
+        radiusM: String(searchRadiusM),
+        nearQuery: searchCenter.query,
+      });
+      if (activeType && activeType !== 'all') params.set('type', activeType);
+      if (keyword) params.set('keyword', keyword);
+      if (soloOnly) params.set('soloOnly', 'true');
+      if (verifiedOnly) params.set('verifiedOnly', 'true');
 
-    spots = await fetchJson(`${API_BASE}/spots?${params}`);
+      spots = await fetchJson(`${API_BASE}/spots?${params}`);
+    } else {
+      const osmSpots = await searchOsmPlaces(
+        searchCenter.latitude,
+        searchCenter.longitude,
+        searchRadiusM,
+      );
+      spots = filterSpots(osmSpots);
+    }
     await applySearchResults();
   } catch (err) {
     showStatus(`검색 실패: ${err.message}`, true);
@@ -544,8 +721,8 @@ async function init() {
 
   try {
     const [mapConfig, types] = await Promise.all([
-      fetch(`${API_ORIGIN}/api/v1/config/naver-map`).then(r => r.json()).then(j => j.data),
-      fetchJson(`${API_BASE}/types`),
+      loadMapConfig(),
+      loadTypes(),
     ]);
 
     initRadiusButtons();
@@ -563,7 +740,21 @@ async function init() {
   } catch (err) {
     console.error(err);
     showStatus(`연결 실패: ${err.message}`, true);
-    showMapSetup(`API 연결 실패 — spring-app을 실행했는지 확인하세요 (${err.message})`);
+    if (!mapClientId && window.LUNCHMAP_CONFIG?.naverClientId) {
+      mapClientId = window.LUNCHMAP_CONFIG.naverClientId;
+      renderTypes(DEFAULT_TYPES);
+      showEmptyPrompt();
+      try {
+        await initNaverMapLayer(mapClientId);
+      } catch (mapErr) {
+        console.error(mapErr);
+        showMapSetup('네이버 지도 인증 실패 — NCP Web URL에 이 페이지 주소를 추가하세요.');
+      }
+      return;
+    }
+    showMapSetup(STATIC_MODE
+      ? '지도 설정을 불러오지 못했습니다. config.js의 naverClientId를 확인하세요.'
+      : `API 연결 실패 — spring-app을 실행했는지 확인하세요 (${err.message})`);
   }
 }
 
