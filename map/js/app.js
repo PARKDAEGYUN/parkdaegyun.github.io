@@ -142,18 +142,8 @@ out center 25;`;
 }
 
 function filterSpots(list) {
-  const keyword = document.getElementById('keywordInput').value.trim().toLowerCase();
-  const soloOnly = document.getElementById('soloOnlyFilter').checked;
-  const verifiedOnly = document.getElementById('verifiedOnlyFilter').checked;
-
   return list.filter(s => {
     if (activeType && activeType !== 'all' && s.typeSlug !== activeType) return false;
-    if (keyword) {
-      const hay = `${s.name} ${s.menuHighlight || ''} ${s.buildingName || ''}`.toLowerCase();
-      if (!hay.includes(keyword)) return false;
-    }
-    if (soloOnly && !s.soloDining) return false;
-    if (verifiedOnly && !s.workerVerified) return false;
     return true;
   });
 }
@@ -397,11 +387,7 @@ function renderMarkers(spotList) {
 
     naver.maps.Event.addListener(marker, 'click', () => {
       selectSpot(spot.id);
-      const badges = [
-        spot.soloDining ? '🪑 혼밥' : '',
-        spot.workerVerified ? '✅ 인증' : '',
-      ].filter(Boolean).join(' ');
-      infoWindow.setContent(`<div style="padding:8px;min-width:200px;"><strong>${spot.name}</strong><br/><span style="color:#666;font-size:12px;">${spot.typeName}${badges ? ' · ' + badges : ''}</span><br/><span style="color:#f59e0b;font-size:12px;">★ ${spot.rating}</span>${spot.menuHighlight ? `<br/><span style="font-size:11px;color:#444;">${spot.menuHighlight}</span>` : ''}</div>`);
+      infoWindow.setContent(`<div style="padding:8px;min-width:200px;"><strong>${spot.name}</strong><br/><span style="color:#666;font-size:12px;">${spot.typeName}</span><br/><span style="color:#f59e0b;font-size:12px;">★ ${spot.rating}</span>${spot.menuHighlight ? `<br/><span style="font-size:11px;color:#444;">${spot.menuHighlight}</span>` : ''}</div>`);
       infoWindow.open(map, marker);
     });
     markers.push(marker);
@@ -512,8 +498,6 @@ function renderSpotList(spotList) {
       <div class="spot-item__info">
         <div class="spot-item__meta">
           <span class="spot-item__type">${s.typeIcon || ''} ${s.typeName}</span>
-          ${s.soloDining ? '<span class="spot-item__badge">혼밥</span>' : ''}
-          ${s.workerVerified ? '<span class="spot-item__badge">인증</span>' : ''}
           ${s.id < 0 ? '<span class="spot-item__badge">실시간</span>' : ''}
         </div>
         <div class="spot-item__name">${s.name}</div>
@@ -536,8 +520,6 @@ function renderDetail(spot) {
     <div class="detail__body">
       <div class="detail__badges">
         <span class="detail__badge detail__badge--type">${spot.typeIcon || ''} ${spot.typeName}</span>
-        ${spot.soloDining ? '<span class="detail__badge detail__badge--solo">🪑 혼밥 가능</span>' : ''}
-        ${spot.workerVerified ? '<span class="detail__badge detail__badge--verified">✅ 직장인 인증</span>' : ''}
       </div>
       <h2 class="detail__name">${spot.name}</h2>
       ${spot.buildingName ? `<div class="detail__building">📍 ${spot.buildingName}</div>` : ''}
@@ -598,14 +580,8 @@ function geocodeOnClient(query) {
 async function resolveLocation(query) {
   if (API_BASE) {
     try {
-      const soloOnly = document.getElementById('soloOnlyFilter').checked;
-      const verifiedOnly = document.getElementById('verifiedOnlyFilter').checked;
-      const spotKeyword = document.getElementById('keywordInput').value.trim();
       const params = new URLSearchParams({ query, radiusM: String(searchRadiusM) });
       if (activeType && activeType !== 'all') params.set('type', activeType);
-      if (spotKeyword) params.set('keyword', spotKeyword);
-      if (soloOnly) params.set('soloOnly', 'true');
-      if (verifiedOnly) params.set('verifiedOnly', 'true');
 
       const result = await fetchJson(`${API_BASE}/locations/search?${params}`);
       return {
@@ -671,10 +647,6 @@ async function loadSpots() {
 
   try {
     if (API_BASE) {
-      const keyword = document.getElementById('keywordInput').value.trim();
-      const soloOnly = document.getElementById('soloOnlyFilter').checked;
-      const verifiedOnly = document.getElementById('verifiedOnlyFilter').checked;
-
       const params = new URLSearchParams({
         nearLat: String(searchCenter.latitude),
         nearLng: String(searchCenter.longitude),
@@ -682,9 +654,6 @@ async function loadSpots() {
         nearQuery: searchCenter.query,
       });
       if (activeType && activeType !== 'all') params.set('type', activeType);
-      if (keyword) params.set('keyword', keyword);
-      if (soloOnly) params.set('soloOnly', 'true');
-      if (verifiedOnly) params.set('verifiedOnly', 'true');
 
       spots = await fetchJson(`${API_BASE}/spots?${params}`);
     } else {
@@ -761,22 +730,6 @@ async function init() {
 document.getElementById('locationSearchBtn').addEventListener('click', searchByLocation);
 document.getElementById('locationInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') searchByLocation();
-});
-document.getElementById('keywordSearchBtn').addEventListener('click', () => {
-  if (searchCenter) loadSpots();
-  else searchByLocation();
-});
-document.getElementById('keywordInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
-    if (searchCenter) loadSpots();
-    else searchByLocation();
-  }
-});
-document.getElementById('soloOnlyFilter').addEventListener('change', () => {
-  if (searchCenter) loadSpots();
-});
-document.getElementById('verifiedOnlyFilter').addEventListener('change', () => {
-  if (searchCenter) loadSpots();
 });
 document.getElementById('detailClose').addEventListener('click', () => {
   document.getElementById('detailPanel').classList.remove('open');

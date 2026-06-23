@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LunchMap | 직장인 맛집 지도</title>
+  <title>주변 맛집 | 맛집 지도</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet" />
@@ -17,16 +17,12 @@
     <a href="../index.html" class="header__home" aria-label="포트폴리오로 돌아가기">←</a>
     <div class="header__brand">
       <span class="header__logo">🍱</span>
-      <h1>LunchMap</h1>
+      <h1>주변 맛집</h1>
       <span class="header__tagline">어디서든 · 주변 맛집</span>
     </div>
     <div class="header__search">
       <input type="search" id="locationInput" placeholder="위치 입력 (역, 건물명, 주소 — 예: 강남역, IFC타워)..." autocomplete="off" />
       <button type="button" id="locationSearchBtn">주변 검색</button>
-    </div>
-    <div class="header__search header__search--secondary">
-      <input type="search" id="keywordInput" placeholder="맛집명, 메뉴, 건물명..." />
-      <button type="button" id="keywordSearchBtn">검색</button>
     </div>
   </header>
 
@@ -44,19 +40,6 @@
       <div class="sidebar__section">
         <div class="sidebar__label">유형</div>
         <div class="sidebar__types" id="typeList"></div>
-      </div>
-      <div class="sidebar__section">
-        <div class="sidebar__label">필터</div>
-        <div class="sidebar__filters">
-          <label class="filter-chip">
-            <input type="checkbox" id="soloOnlyFilter" />
-            <span>🪑 혼밥 가능</span>
-          </label>
-          <label class="filter-chip">
-            <input type="checkbox" id="verifiedOnlyFilter" />
-            <span>✅ 직장인 인증</span>
-          </label>
-        </div>
       </div>
       <div class="sidebar__count" id="spotCount">맛집 0개</div>
       <ul class="sidebar__list" id="spotList"></ul>
@@ -90,6 +73,6 @@
 
   <script src="js/config.js"></script>
   <script src="../tooplate-neural-scripts.js"></script>
-  <script src="js/app.js?v=2"></script>
+  <script src="js/app.js?v=3"></script>
 </body>
 </html>

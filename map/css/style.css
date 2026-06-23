@@ -119,7 +119,7 @@ a:hover { color: var(--accent); }
 .header__search {
   flex: 1;
   min-width: 200px;
-  max-width: 320px;
+  max-width: 480px;
   display: flex;
   border: 1px solid var(--border);
   border-radius: 10px;
